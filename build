@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+log() {
+	echo "[$0] $@"
+}
+log "Cleaning..."
+rm -rf out/
+mkdir -p out
+
+log "Compiling..."
+gcc -o out/dog dog.c
+
+log "Running dog..."
+./out/dog dog.c
+
+log "Build complete."
+
