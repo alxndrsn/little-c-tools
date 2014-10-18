@@ -16,7 +16,6 @@ int output_file(char *filename) {
 
 	while(fgets(buf, BUF_SIZE, f) != NULL) printf(buf);
 
-	fclose(f);
-	return 0;
+	return fclose(f);
 }
 
