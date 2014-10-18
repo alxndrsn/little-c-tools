@@ -1,16 +1,43 @@
 #!/usr/bin/env bash
+set -eu
+do_clean=false
+
 log() {
 	echo "[$0] $@"
 }
-log "Cleaning..."
-rm -rf out/
-mkdir -p out
+compile() {
+	local name="$1"
+	log "Compiling $name..."
+	local source_file="$name.c"
+	local target_file="out/$name"
+	local hash_file="out/source_hash/$name.md5"
+	local md5_hash="$(md5sum ${source_file})"
+	if [[ "$md5_hash" != "$(<$hash_file)" ]]; then
+		echo "$md5_hash" > "$hash_file"
+		gcc -o $target_file $source_file
+	fi
+	log "Compiled $name."
+}
+run() {
+	local name="$1"
+	shift
+	log "Running $name with args [$@]..."
+	./out/$name "$@"
+	log "Ran $name."
+}
 
-log "Compiling..."
-gcc -o out/dog dog.c
+if $do_clean; then
+	log "Cleaning..."
+	rm -rf out/bin
+	mkdir -p out/source_hash out/bin
+	log "Cleaned."
+fi
 
-log "Running dog..."
-./out/dog dog.c
+compile reverberate
+run reverberate "Is there an echo in here?!" "Yes!"
+
+compile dog
+run dog test/data/dog/1 test/data/dog/2 test/data/dog/3
 
 log "Build complete."
 
