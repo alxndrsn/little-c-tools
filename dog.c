@@ -14,7 +14,7 @@ int output_file(char *filename) {
 	if(!(f = fopen(filename, "r")))
 		return 1;
 
-	while(fgets(buf, BUF_SIZE, f) != NULL) printf("%s", buf);
+	while(fgets(buf, BUF_SIZE, f) != NULL) printf(buf);
 
 	fclose(f);
 	return 0;
